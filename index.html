@@ -3,147 +3,105 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Platform engineering, cloud infrastructure, automation, and reliability by Levi Lugato.">
-  <meta name="theme-color" content="#151512">
-  <meta property="og:title" content="Levi Lugato — Senior Platform / DevOps / Systems Engineer">
-  <meta property="og:description" content="Infrastructure automation, cloud platforms, delivery, and reliability.">
+  <meta name="description" content="Levi Lugato is a Staff / Lead DevOps and Platform Engineer focused on resilient cloud platforms, automation, and reliability.">
+  <meta name="theme-color" content="#07110e">
+  <meta property="og:title" content="Levi Lugato | Staff / Lead Platform Engineer">
+  <meta property="og:description" content="From on-premises infrastructure to multi-account, multi-region cloud platforms.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://levilugato.tech/">
   <meta property="og:image" content="https://levilugato.tech/og.png">
   <meta name="twitter:card" content="summary_large_image">
-  <title>Levi Lugato — Senior Platform / DevOps / Systems Engineer</title>
+  <title>Levi Lugato | Staff / Lead Platform Engineer</title>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css">
+  <script src="script.js" defer></script>
 </head>
 <body>
-  <main>
-    <header class="site-header">
-      <a class="wordmark" href="#top" aria-label="Levi Lugato, home">LL<span>.</span></a>
-      <nav aria-label="Primary navigation">
-        <a href="#work">Work</a>
-        <a href="#resume">Résumé</a>
-        <a href="https://www.credly.com/users/levi-lugato/badges" target="_blank" rel="noreferrer">Credentials ↗</a>
-        <a href="#contact">Contact</a>
-      </nav>
-    </header>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="Levi Lugato, home"><img src="favicon.svg" alt=""><span>levi@platform</span><b>:~$</b></a>
+    <nav aria-label="Primary navigation"><a href="#about">about</a><a href="#work">work</a><a href="#resume">resume</a><a href="#contact">contact</a></nav>
+    <span class="online"><i></i> available</span>
+  </header>
 
+  <main id="main">
     <section class="hero" id="top">
-      <p class="eyebrow">Senior Platform / DevOps / Systems Engineer</p>
-      <h1>Levi<br><em>Lugato.</em></h1>
-      <p class="hero-copy">I design resilient cloud platforms, automate delivery, and turn operational complexity into systems that are observable, maintainable, and ready to scale.</p>
-      <div class="hero-actions">
-        <a class="button primary" href="#work">Explore my work <span>↘</span></a>
-        <a class="button text-button" href="https://github.com/levilugato" target="_blank" rel="noreferrer">GitHub <span>↗</span></a>
+      <div class="terminal-window">
+        <div class="terminal-bar"><div class="window-dots" aria-hidden="true"><i></i><i></i><i></i></div><span>levi-agent | zsh | 120×40</span><span class="encrypted">● secure session</span></div>
+        <div class="terminal-layout">
+          <aside class="terminal-sidebar" aria-label="Session information">
+            <p class="sidebar-label">workspace</p>
+            <a class="active" href="#top"><span>⌁</span> introduction</a><a href="#about"><span>⌁</span> about.md</a><a href="#work"><span>⌁</span> work/</a><a href="#resume"><span>⌁</span> resume.json</a><a href="#contact"><span>⌁</span> contact.sh</a>
+            <div class="runtime"><p class="sidebar-label">runtime</p><dl><div><dt>location</dt><dd>Braga, PT</dd></div><div><dt>experience</dt><dd>13+ years</dd></div><div><dt>mode</dt><dd>remote</dd></div></dl></div>
+          </aside>
+          <div class="terminal-feed">
+            <div class="prompt-line"><span>levi@platform:~$</span> whoami <i></i></div>
+            <article class="ai-message hero-message"><div class="ai-avatar"><img src="favicon.svg" alt="LL AI icon"></div><div class="message-body">
+              <p class="message-label">LEVI AI <span>just now</span></p><h1>Levi Lugato</h1><p class="role">Staff / Lead DevOps &amp; Platform Engineer</p>
+              <p>I design the platforms behind the product: resilient cloud foundations, safe delivery paths, useful observability, and automation teams can trust.</p>
+              <div class="hero-actions"><a class="primary-action" href="#about">Run ./about-me <span>↵</span></a><a href="https://github.com/levilugato" target="_blank" rel="noreferrer">github.com/levilugato ↗</a></div>
+            </div></article>
+            <div class="prompt-line"><span>levi@platform:~$</span> cat current-focus.txt</div>
+            <article class="ai-message compact-message"><div class="ai-avatar"><img src="favicon.svg" alt=""></div><div class="message-body"><p class="message-label">LEVI AI <span>context loaded</span></p><p>Multi-account and multi-region AWS · Kubernetes · Infrastructure as Code · CI/CD · SRE · OpenTelemetry</p></div></article>
+            <form class="command-form" id="commandForm"><label for="commandInput"><span>levi@platform:~$</span></label><input id="commandInput" name="command" type="text" autocomplete="off" spellcheck="false" placeholder="type help, about, work, resume or contact" aria-describedby="commandOutput"><button type="submit">run ↵</button></form>
+            <p class="command-output" id="commandOutput" aria-live="polite">Try a command to navigate this portfolio.</p>
+          </div>
+        </div>
       </div>
-      <figure class="portrait">
-        <img src="levi-lugato.jpeg" alt="Levi Lugato">
-        <figcaption>Levi Lugato / Platform Engineering</figcaption>
-      </figure>
+      <p class="scroll-cue">scroll to inspect the context <span>↓</span></p>
     </section>
 
-    <section class="manifesto" aria-label="Professional approach">
-      <p class="section-index">01 / Approach</p>
-      <p class="manifesto-copy">My expertise is turning repetitive infrastructure work into <em>reliable automation.</em> From provisioning and delivery to observability and recovery, I remove manual toil so teams can build, release, and operate with confidence.</p>
+    <section class="section about-section" id="about">
+      <div class="command-heading"><span class="line-number">01</span><div><p><span>levi@platform:~$</span> cat about.md</p><h2>About me</h2></div></div>
+      <div class="about-grid">
+        <article class="ai-message about-message"><div class="ai-avatar"><img src="favicon.svg" alt=""></div><div class="message-body prose">
+          <p class="message-label">LEVI AI <span>personal context</span></p>
+          <p>I was born in <strong>Viradouro, a small city in the countryside of São Paulo, Brazil.</strong> I got into IT in 2012 by working close to the hardware: running cable, configuring firewalls, looking after on-premises servers, and supporting Windows, Linux, and the network between them.</p>
+          <p>That hands-on start made me curious about how the whole system fit together, not only the piece directly in front of me. When something failed, I wanted to follow the problem all the way through: from the physical connection and operating system to the service and the person trying to use it.</p>
+          <p>I worked in traditional infrastructure at Linx, then moved deeper into automation and cloud at Magazine Luiza and Beblue. Hapvida brought architecture and internal advocacy into the mix. At Codeminer42, my work became explicitly SRE. Later, at Navisite and Lumenalta, I operated production platforms across cloud and hybrid environments for international teams.</p>
+          <p>Today I work as a <strong>Staff / Lead Platform Engineer</strong> at Arionkoder / iSeatz. I design and operate multi-account, multi-region AWS platforms on EKS and ECS Fargate, build reusable infrastructure with Terraform and CDK, and improve delivery, observability, and developer experience. I have worked fully remotely since 2019 with teams across Latin America, Europe, and Asia. I still like getting close enough to a problem to understand it, then automating the boring parts so the next person has less to fight with.</p>
+        </div></article>
+        <aside class="identity-card"><img src="levi-lugato.jpeg" alt="Levi Lugato"><div class="identity-code"><p><span>name:</span> "Levi Lugato"</p><p><span>origin:</span> "Viradouro, SP"</p><p><span>based_in:</span> "Braga, Portugal"</p><p><span>since:</span> 2012</p><p><span>certs:</span> ["CKA", "CKAD"]</p><p><span>status:</span> <b>"building"</b></p></div></aside>
+      </div>
+      <div class="journey"><p class="mini-label">trajectory.log</p><div class="journey-track">
+        <article><time>2012</time><strong>Physical foundations</strong><p>On-premises infrastructure, cabling, networks, firewalls, servers, Linux and Windows.</p></article>
+        <article><time>2016-2019</time><strong>Automation &amp; cloud</strong><p>Infrastructure as Code, AWS and Azure, containers, delivery pipelines, and architecture.</p></article>
+        <article><time>2019-2023</time><strong>SRE at scale</strong><p>Kubernetes, GitOps, observability, SLOs, and production systems across global teams.</p></article>
+        <article><time>NOW</time><strong>Platform leadership</strong><p>Multi-account, multi-region AWS platforms and self-service paths for engineering teams.</p></article>
+      </div></div>
     </section>
 
-    <section class="work-section" id="work">
-      <div class="section-heading">
-        <p class="section-index">02 / Selected work</p>
-        <h2>Systems, not<br>just scripts.</h2>
-      </div>
+    <section class="section work-section" id="work">
+      <div class="command-heading"><span class="line-number">02</span><div><p><span>levi@platform:~$</span> ls -la work/</p><h2>What I build</h2></div></div>
       <div class="work-grid">
-        <article class="work-card dark-card">
-          <span class="project-number">01</span>
-          <div class="diagram clusters" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
-          <div>
-            <p class="project-type">Platform engineering</p>
-            <h3>Cloud foundations</h3>
-            <p>Repeatable infrastructure, sensible guardrails, and Kubernetes platforms designed for teams—not tickets.</p>
-            <ul><li>Terraform</li><li>Kubernetes</li><li>AWS / GCP</li></ul>
-          </div>
-        </article>
-
-        <article class="work-card acid-card">
-          <span class="project-number">02</span>
-          <div class="diagram pipeline" aria-hidden="true"><i></i><b>→</b><i></i><b>→</b><i></i></div>
-          <div>
-            <p class="project-type">Delivery engineering</p>
-            <h3>Release systems</h3>
-            <p>CI/CD workflows that shorten feedback loops while keeping security, traceability, and rollback close at hand.</p>
-            <ul><li>GitLab CI</li><li>GitHub Actions</li><li>Helm</li></ul>
-          </div>
-        </article>
-
-        <article class="work-card light-card wide-card">
-          <span class="project-number">03</span>
-          <div class="signal" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-          <div>
-            <p class="project-type">Reliability engineering</p>
-            <h3>Operational clarity</h3>
-            <p>Observability and incident practices that turn noisy systems into actionable signals and measurable reliability.</p>
-            <ul><li>OpenTelemetry</li><li>Prometheus</li><li>Grafana</li><li>SRE</li></ul>
-          </div>
-        </article>
-      </div>
-      <a class="github-line" href="https://github.com/levilugato" target="_blank" rel="noreferrer"><span>GitHub profile</span><strong>github.com/levilugato ↗</strong></a>
-    </section>
-
-    <section class="resume-section" id="resume">
-      <div class="section-heading resume-heading">
-        <p class="section-index">03 / Résumé</p>
-        <h2>Experience<br>in the engine room.</h2>
-        <p class="section-lede">Senior platform engineering across product and consultancy teams.</p>
-        <div class="resume-links">
-          <a class="resume-download" href="levi-lugato-resume.pdf" download>Download résumé <span>↓</span></a>
-          <a class="credential-link" href="https://www.credly.com/users/levi-lugato/badges" target="_blank" rel="noreferrer">View verified credentials <span>↗</span></a>
-        </div>
-      </div>
-      <div class="resume-content">
-        <div class="resume-row">
-          <p>Current focus</p>
-          <div><h3>Senior Platform / DevOps / Systems Engineer</h3><span>Cloud platforms · Automation · Reliability</span></div>
-        </div>
-        <div class="resume-row">
-          <p>What I deliver</p>
-          <div><h3>Platform foundations</h3><span>Infrastructure as code, container orchestration, delivery pipelines, observability, and operational standards.</span></div>
-        </div>
-        <div class="resume-row">
-          <p>How I work</p>
-          <div><h3>Pragmatic by default</h3><span>Small feedback loops, clear ownership, documented decisions, and automation that removes toil without hiding the system.</span></div>
-        </div>
-
-        <div class="stack-block">
-          <p class="mini-title">Core toolkit</p>
-          <div class="stack-group">
-            <strong>Platform &amp; code</strong>
-            <div class="stack-list"><span>AWS</span><span>AWS CDK</span><span>TypeScript</span><span>Python</span><span>Terraform</span><span>Kubernetes</span><span>Docker</span><span>Helm</span><span>Linux</span></div>
-          </div>
-          <div class="stack-group">
-            <strong>AWS services</strong>
-            <div class="stack-list"><span>EKS</span><span>ECS</span><span>Lambda</span><span>API Gateway</span><span>VPC</span><span>IAM</span><span>S3</span><span>CloudFront</span><span>Route 53</span><span>RDS</span><span>DynamoDB</span><span>SQS</span><span>SNS</span><span>Step Functions</span><span>CloudWatch</span><span>Secrets Manager</span></div>
-          </div>
-          <div class="stack-group">
-            <strong>Delivery &amp; observability</strong>
-            <div class="stack-list"><span>GitLab CI</span><span>GitHub Actions</span><span>OpenTelemetry</span><span>Prometheus</span><span>Grafana</span></div>
-          </div>
-        </div>
+        <article class="work-card"><div class="file-head"><span>drwxr-xr-x</span><b>platform-foundations/</b><i>01</i></div><h3>Cloud platforms that give teams a paved road.</h3><p>Reusable infrastructure, sensible guardrails, and self-service patterns across multi-account and multi-region AWS.</p><ul><li>Terraform</li><li>AWS CDK</li><li>EKS</li><li>ECS Fargate</li></ul></article>
+        <article class="work-card"><div class="file-head"><span>drwxr-xr-x</span><b>delivery-systems/</b><i>02</i></div><h3>Delivery paths built for speed and recovery.</h3><p>Traceable CI/CD, GitOps, blue/green and canary releases, with rollback close at hand.</p><ul><li>GitHub Actions</li><li>GitLab CI</li><li>CodePipeline</li><li>Helm</li></ul></article>
+        <article class="work-card wide-card"><div class="file-head"><span>drwxr-xr-x</span><b>reliability/</b><i>03</i></div><div class="wide-copy"><h3>Signals that explain the system, not just its symptoms.</h3><p>Telemetry, SLOs, incident practices, and operational standards that turn production noise into useful context.</p></div><ul><li>OpenTelemetry</li><li>Prometheus</li><li>Grafana</li><li>Sumo Logic</li><li>OpenSearch</li></ul></article>
       </div>
     </section>
 
-    <section class="contact-section" id="contact">
-      <p class="section-index">04 / Contact</p>
-      <div class="contact-inner">
-        <h2>Have a hard<br>systems problem?</h2>
-        <a href="mailto:levilugato@gmail.com">Let's talk <span>↗</span></a>
-      </div>
-      <div class="contact-meta">
-        <span>Platform engineering · Cloud · Reliability</span>
-        <a href="mailto:levilugato@gmail.com">levilugato@gmail.com</a>
-        <a href="https://github.com/levilugato" target="_blank" rel="noreferrer">GitHub ↗</a>
+    <section class="section resume-section" id="resume">
+      <div class="command-heading"><span class="line-number">03</span><div><p><span>levi@platform:~$</span> jq . resume.json</p><h2>Experience, parsed</h2></div></div>
+      <div class="resume-grid">
+        <div class="json-panel"><pre><code>{
+  <span class="key">"role"</span>: <span class="string">"Staff / Lead Platform Engineer"</span>,
+  <span class="key">"experience"</span>: <span class="number">"13+ years"</span>,
+  <span class="key">"cloud"</span>: [<span class="string">"AWS"</span>, <span class="string">"Azure"</span>, <span class="string">"GCP"</span>, <span class="string">"OCI"</span>],
+  <span class="key">"platforms"</span>: [<span class="string">"Kubernetes"</span>, <span class="string">"EKS"</span>, <span class="string">"ECS"</span>],
+  <span class="key">"iac"</span>: [<span class="string">"Terraform"</span>, <span class="string">"AWS CDK"</span>, <span class="string">"CloudFormation"</span>],
+  <span class="key">"certified"</span>: [<span class="string">"CKA"</span>, <span class="string">"CKAD"</span>],
+  <span class="key">"remote_since"</span>: <span class="number">2019</span>
+}</code></pre><div class="resume-actions"><a class="primary-action" href="levi-lugato-resume.pdf" download>Download full résumé ↓</a><a href="https://www.credly.com/users/levi-lugato/badges" target="_blank" rel="noreferrer">Verified credentials ↗</a></div></div>
+        <div class="experience-list"><p class="mini-label">recent_history --limit 4</p><article><time>2023-NOW</time><div><strong>Arionkoder / iSeatz</strong><span>Lead / Staff Platform Engineer</span></div></article><article><time>2021-2023</time><div><strong>Lumenalta</strong><span>Senior DevOps Engineer</span></div></article><article><time>2020-2021</time><div><strong>Navisite</strong><span>Senior DevOps Engineer</span></div></article><article><time>2019-2020</time><div><strong>Codeminer42</strong><span>Site Reliability Engineer</span></div></article><p class="history-note">Earlier: Hapvida · Beblue · Magazine Luiza / LuizaLabs · Linx</p></div>
       </div>
     </section>
 
-    <footer><span>© 2026 Levi Lugato</span><a href="#top">Back to top ↑</a></footer>
+    <section class="section contact-section" id="contact">
+      <div class="command-heading"><span class="line-number">04</span><div><p><span>levi@platform:~$</span> ./contact.sh</p><h2>Let’s solve a hard systems problem.</h2></div></div>
+      <article class="ai-message contact-message"><div class="ai-avatar"><img src="favicon.svg" alt=""></div><div class="message-body"><p class="message-label">LEVI AI <span>ready</span></p><p>Tell me what is unreliable, repetitive, slow, or difficult to operate. That is usually where the useful work begins.</p><div class="contact-links"><a class="primary-action" href="mailto:levilugato@gmail.com">levilugato@gmail.com ↗</a><a href="https://www.linkedin.com/in/levilugato" target="_blank" rel="noreferrer">LinkedIn ↗</a><a href="https://github.com/levilugato" target="_blank" rel="noreferrer">GitHub ↗</a></div></div></article>
+    </section>
   </main>
+
+  <footer><span>© 2026 Levi Lugato</span><span class="footer-command">process exited with code 0</span><a href="#top">back to top ↑</a></footer>
 </body>
 </html>
