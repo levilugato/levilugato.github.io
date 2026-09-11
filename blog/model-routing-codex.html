@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="How to use model routing, subagents, AGENTS.md, and TOML profiles in Codex to reduce context and reserve the main model for complex decisions.">
+  <meta name="description" content="How model routing, RTK, structured code navigation, and outcome-based measurement reduce token waste in Codex without weakening technical decisions.">
   <meta name="theme-color" content="#07110e">
   <meta property="og:title" content="Model routing in Codex: Terra explores, Luna executes">
-  <meta property="og:description" content="A practical architecture for reducing the main agent’s context without outsourcing critical decisions.">
+  <meta property="og:description" content="A practical system for routing models, filtering tool output with RTK, and measuring token use against engineering outcomes.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://levilugato.tech/blog/model-routing-codex.html">
   <meta property="og:image" content="https://levilugato.tech/og.png?v=20260906-1">
@@ -22,7 +22,7 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Model routing in Codex: Terra explores, Luna executes",
-    "description": "A practical architecture for reducing the main agent’s context without outsourcing critical decisions.",
+    "description": "A practical system for routing models, filtering tool output with RTK, and measuring token use against engineering outcomes.",
     "datePublished": "2026-09-11",
     "dateModified": "2026-09-11",
     "author": { "@type": "Person", "name": "Levi Lugato", "url": "https://levilugato.tech/" },
@@ -44,26 +44,65 @@
       <header class="article-header">
         <p class="article-kicker">AI ENGINEERING · CONTEXT ENGINEERING</p>
         <h1>Model routing in Codex: Terra explores, Luna executes</h1>
-        <p class="article-deck">How to reduce the main agent’s context with specialized subagents—without outsourcing architecture, security, or technical accountability.</p>
-        <div class="article-byline"><span>By Levi Lugato</span><time datetime="2026-09-11">September 11, 2026</time><span>12 min read</span></div>
+        <p class="article-deck">A practical system for routing models, filtering noisy tool output with RTK, and measuring token use against engineering outcomes.</p>
+        <div class="article-byline"><span>By Levi Lugato</span><time datetime="2026-09-11">September 11, 2026</time><span>9 min read</span></div>
       </header>
 
       <div class="article-body">
-        <p>A large share of a coding agent’s cost does not come from sophisticated reasoning. It comes from I/O: locating files, reading large modules, comparing manifests, counting occurrences, generating boilerplate, and running predictable checks. Putting all of that into the primary model’s context is like hiring a principal engineer to spend hours taking directory inventory.</p>
+        <p>A coding agent spends tokens on more than reasoning. It spends them moving information: listing files, reading modules, parsing test logs, comparing manifests, and repeating context across turns. That work is necessary, but the raw output often is not. A thousand-line test run may contain one failing assertion. Five files may be opened to find one relevant function.</p>
 
-        <p>The alternative is <strong>model routing</strong>: classify each subtask by the capability it requires and send it to the appropriate model. The primary model remains responsible for the problem; workers absorb read-intensive exploration and mechanical execution.</p>
+        <p>Token efficiency starts by treating the context window as a finite engineering resource. The objective is not to minimize usage at any cost. It is to keep high-signal evidence near the model that makes the difficult decisions, while filtering routine noise and moving bounded work to appropriately sized agents.</p>
 
-        <blockquote><p>The goal is not to remove tokens from the system. It is to prevent low-value tokens from occupying the most expensive and cognitively important context.</p></blockquote>
+        <blockquote><p>Spend tokens where they improve the decision. Compress the rest.</p></blockquote>
 
-        <h2>The problem: the context window is an architectural concern</h2>
+        <h2>Token volume is a trace, not a performance metric</h2>
 
-        <p>When an agent reads dozens of files, every result competes for space with requirements, previous decisions, test failures, and high-value evidence. Even before a hard context limit is reached, the signal-to-noise ratio deteriorates. The model must repeatedly recover what matters from an increasingly large transcript.</p>
+        <p><a href="https://natesnewsletter.substack.com/p/token-burn-dashboard" target="_blank" rel="noreferrer">Nate's token burn dashboard</a> makes a useful distinction: token usage becomes meaningful only when it is connected to outcomes. A large number can mean that agents handled more real work. It can also mean that the workflow repeatedly loaded irrelevant context. The number alone cannot tell you which one happened.</p>
 
-        <p>This makes <strong>context engineering</strong> an architectural discipline. A good prompt is not enough; we must control which data enters the context, who processes it, and the format in which it returns.</p>
+        <p>This is especially important across tools. Codex, Claude, and ChatGPT do not necessarily account for tokens in directly comparable ways. A dashboard should therefore behave like an observability surface, not a leaderboard. Track what task ran, which model handled it, whether the output was accepted, how much rework followed, and what engineering result changed.</p>
 
-        <h2>A practical division of responsibility</h2>
+        <p>The same principle applies to teams. Ranking engineers by token burn rewards volume without proving value. A better review asks whether a successful one-off run became a repeatable workflow. A short weekly review is enough to find those patterns and decide what should be automated next.</p>
 
-        <p>In Codex, I use three levels. Routing is not simply about a “strong model” and a “weak model.” It is based on the shape of the task:</p>
+        <h2>The context window is an architectural concern</h2>
+
+        <p>Every file, command result, requirement, and previous decision competes for attention inside the context window. Long before the hard limit is reached, the signal-to-noise ratio can deteriorate. The model must repeatedly recover the relevant facts from a larger transcript, which adds latency and increases the chance that an earlier constraint is missed.</p>
+
+        <p>This makes <strong>context engineering</strong> part of system design. Prompts matter, but so do data selection, tool output, delegation boundaries, and return formats. In practice, I use three controls together:</p>
+
+        <ol>
+          <li>filter noisy command output before it reaches the model;</li>
+          <li>give agents a structural map before they start reading files;</li>
+          <li>route bounded work to the least expensive model that can perform it reliably.</li>
+        </ol>
+
+        <h2>First control: filter tool output with RTK</h2>
+
+        <p><a href="https://github.com/rtk-ai/rtk" target="_blank" rel="noreferrer">RTK</a> is a command-line proxy that sits between an agent and common development commands. It keeps the part the model needs and collapses routine output. A failing test remains visible, while passing-test scaffolding becomes a count. A large <code>git status</code> becomes a compact state summary. Repeated container logs can be deduplicated.</p>
+
+        <pre><code># Raw commands still exist, but the agent can prefer compact variants
+rtk git status
+rtk pytest
+rtk tsc
+rtk docker logs api
+rtk aws sts get-caller-identity</code></pre>
+
+        <p>For Codex, <code>rtk init -g --codex</code> adds instruction-based integration so the agent prefers RTK for supported commands. This is different from hook-based integrations that rewrite shell calls automatically. The operational goal is the same: reduce low-value text before it enters the conversation history.</p>
+
+        <p>AutoScout24 reports a 60% to 90% reduction in development-loop output from this approach. RTK itself is careful about what that means. The percentage describes compressed shell output, not a 90% reduction in the total AI bill. Prompts, system instructions, conversation history, model output, and reasoning still consume tokens. RTK also estimates token counts from bytes, so its absolute token totals are approximate.</p>
+
+        <p>The useful commands are <code>rtk gain</code>, which shows estimated cumulative savings, and <code>rtk discover</code>, which finds noisy commands that still bypass the proxy. That turns output compression into something observable instead of a rule that nobody knows is working.</p>
+
+        <h2>Second control: give the agent a map</h2>
+
+        <p>Blind repository exploration is expensive. An agent searches for <code>auth</code>, opens several files, follows imports, reads tests, and slowly reconstructs a dependency graph that the codebase already contains.</p>
+
+        <p>A structural index can answer smaller questions: who calls this function, what depends on this module, where are the tests, and what is the likely impact radius? Tree-sitter or language-server-based tools can expose that information through MCP. Semantic search helps when the question is about intent rather than a symbol name. Repo packers are useful when a clean whole-repository snapshot is genuinely required.</p>
+
+        <p>The order matters. Ask the graph or index first, then use <code>rg</code> and direct file reads to verify the relevant sections. Structured navigation has setup and maintenance cost, so it pays off most in large or tightly coupled repositories. Small codebases may not need it.</p>
+
+        <h2>Third control: route work to the right model</h2>
+
+        <p>Model routing classifies a subtask by ambiguity, volume, and the cost of a mistake. It is not a contest between a "strong" model and a "weak" one. In Codex, I use three levels:</p>
 
         <table class="routing-table">
           <thead><tr><th>Owner</th><th>Workload</th><th>Why</th></tr></thead>
@@ -74,11 +113,11 @@
           </tbody>
         </table>
 
-        <p>This separation prevents two common mistakes: using a frontier model for purely mechanical work, or allowing an economical worker to make decisions that require system-level understanding.</p>
+        <p>This prevents two expensive mistakes. The first is using the primary model for repetitive work. The second is allowing a cheaper worker to make decisions that require system-level judgment. Reasoning effort belongs in the routing decision too. A narrow scan rarely needs deep reasoning, even if it uses the same model family.</p>
 
         <h2>Fan-out, reduction, and synthesis</h2>
 
-        <p>For a broad analysis, the primary agent can run a small <strong>map-reduce</strong> pattern:</p>
+        <p>For broad analysis, the primary agent can use a small <strong>map-reduce</strong> pattern:</p>
 
         <pre><code>user request
     │
@@ -86,7 +125,7 @@
     ├── mechanical_worker ──► counts + manifests + checks
     └── primary agent ──► security + architecture + final synthesis</code></pre>
 
-        <p>During <strong>fan-out</strong>, independent subtasks run in parallel. During reduction, each worker returns only structured conclusions: files, line numbers, validation, and risks. The primary agent then correlates the results and directly inspects only the decisive sections.</p>
+        <p>During <strong>fan-out</strong>, independent subtasks run in parallel. During reduction, each worker returns structured conclusions: files, line numbers, validation, and risks. The primary agent correlates those results and inspects the decisive sections.</p>
 
         <p>The output contract matters. If a subagent returns long logs or complete files, the savings disappear. Its output must be deliberately small, precise, and auditable.</p>
 
@@ -105,7 +144,7 @@
   integration in the primary agent.
 - Never assign overlapping files to concurrent editing agents.</code></pre>
 
-        <p>This creates a readable, versionable policy independent of each task’s prompt. Instructions alone, however, should not replace technical isolation. Agent profiles complete the policy.</p>
+        <p>This creates a readable, versioned policy independent of each task's prompt. Instructions do not replace technical isolation. Agent profiles complete the policy.</p>
 
         <h2>TOML profiles: capability and least privilege</h2>
 
@@ -138,22 +177,39 @@ and line numbers. Never edit files or make final decisions.
 
         <p>Subagents can collect evidence in these domains, but final interpretation should remain with the agent that owns the end-to-end view.</p>
 
-        <h2>The hidden cost of delegation</h2>
+        <h2>Delegation has a break-even point</h2>
 
-        <p>Delegation has a cost too. There is orchestration latency, some repeated context, and token consumption by the worker. For small files or tasks that take only a few minutes, the overhead can exceed the savings. Routing therefore needs a threshold: delegate when there is enough volume, real parallelism, or predictable work to justify coordination.</p>
+        <p>Delegation adds orchestration latency, repeats some context, and consumes tokens in the worker. For a small file or a task that takes only a few minutes, the overhead may exceed the savings. Delegate when the job has enough volume, real parallelism, or a stable output contract to justify coordination.</p>
 
-        <div class="article-callout"><strong>About the 90% reduction</strong><p>The figure reported by Spotify measures the reduction of tokens in the primary agent’s context under specific scenarios. The worker still consumes tokens. The economic benefit depends on delegated volume, model pricing, and summary quality.</p></div>
+        <div class="article-callout"><strong>Three different 90% claims</strong><p>Spotify reports mean savings of roughly 90% in its Claude-side bulk-read scenarios when Portal workers return summaries. AutoScout24 reports 60% to 90% less development-loop output with RTK. RTK advertises up to 90% compression for supported shell output. None of these claims means a universal 90% reduction in total cost. They measure different boundaries.</p></div>
+
+        <h2>Measure efficiency against outcomes</h2>
+
+        <p>A useful dashboard combines consumption, workflow, and delivery data. I would start with these measures:</p>
+
+        <ul>
+          <li>input and output tokens by tool, model, task type, and repository;</li>
+          <li>RTK's estimated shell-output savings and the commands that still produce noise;</li>
+          <li>cache-hit ratio, latency, and cost per completed or merged AI-assisted task;</li>
+          <li>acceptance, rework, test failures, rollbacks, and review findings;</li>
+          <li>the proportion of successful one-off runs converted into reusable workflows.</li>
+        </ul>
+
+        <p>Cross-tool totals should remain separate unless their accounting methods are normalized. Even then, the dashboard needs labels that distinguish measured tokens from estimates. Cost per accepted outcome is more useful than raw burn, but quality checks must stay beside the cost number. A cheap result that creates rework is not efficient.</p>
 
         <h2>Accountability remains with the primary agent</h2>
 
-        <p>The best implementation of this pattern is not the one that creates the most agents. It is the one that keeps the primary context small without losing traceability. The primary agent must validate evidence, inspect consequential changes, run appropriate tests, and reject weak conclusions.</p>
+        <p>The best implementation is not the one that creates the most agents or produces the lowest token chart. It keeps the primary context focused without losing traceability. The primary agent validates evidence, inspects consequential changes, runs appropriate tests, and rejects weak conclusions.</p>
 
-        <p>Model routing is ultimately Platform Engineering applied to agents: specialized paved paths, guardrails, isolation, and predictable interfaces that make the system more efficient—without obscuring who remains accountable for the outcome.</p>
+        <p>This is Platform Engineering applied to coding agents: give each workload a paved path, filter routine noise at the boundary, isolate capabilities, and measure the result. RTK reduces information movement. Structural indexes reduce blind exploration. Model routing assigns work by ambiguity and risk. The primary agent still owns the final decision.</p>
 
         <h2>References</h2>
 
         <ul>
           <li><a href="https://engineering.atspotify.com/2026/9/portal-by-spotify-cut-my-claude-code-token-usage-by-90" target="_blank" rel="noreferrer">Spotify Engineering — Portal by Spotify cut my Claude Code token usage by 90%</a></li>
+          <li><a href="https://natesnewsletter.substack.com/p/token-burn-dashboard" target="_blank" rel="noreferrer">Nate's Newsletter — Build a Token Burn Dashboard to Track What Your AI Actually Does</a></li>
+          <li><a href="https://tech.autoscout24.com/blog/posts/3-techniques-to-reduce-token-consumption-claude-code-codex/" target="_blank" rel="noreferrer">AutoScout24 TechBlog — 3 Simple Techniques to Reduce Token Consumption in Claude Code and Codex</a></li>
+          <li><a href="https://github.com/rtk-ai/rtk" target="_blank" rel="noreferrer">RTK — CLI proxy for compact development-tool output</a></li>
           <li><a href="https://learn.chatgpt.com/docs/agent-configuration/subagents" target="_blank" rel="noreferrer">OpenAI Docs — Subagents</a></li>
           <li><a href="https://learn.chatgpt.com/docs/agent-configuration/agents-md" target="_blank" rel="noreferrer">OpenAI Docs — Custom instructions with AGENTS.md</a></li>
         </ul>
