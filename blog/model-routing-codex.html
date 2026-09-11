@@ -100,6 +100,8 @@ rtk aws sts get-caller-identity</code></pre>
 
         <p>Tree-sitter and language-server-based tools build this map from the code's syntax and references. MCP gives the agent a standard way to ask questions such as "who calls this function?" or "what is the impact radius?" Semantic search helps when the agent knows the intent but not the symbol name. Repo packers provide a cleaned snapshot when the whole repository is genuinely needed.</p>
 
+        <p>In my Codex setup, <a href="https://github.com/tirth8205/code-review-graph" target="_blank" rel="noreferrer"><code>code-review-graph</code></a> provides this layer. It uses Tree-sitter to build a persistent graph of functions, classes, imports, calls, tests, and dependencies, then exposes targeted graph queries through MCP. Incremental updates reparse changed files instead of rebuilding the entire repository. I keep cloud embeddings disabled and expose only the analysis tools needed for discovery, review context, and impact analysis.</p>
+
         <p>The map does not replace source inspection. It narrows the search. The efficient order is to query the graph first, use <code>rg</code> to confirm the relevant locations, and read the exact code before editing it. Structured navigation has setup and maintenance cost, so it pays off most in large or tightly coupled repositories. Small codebases may not need it.</p>
 
         <h2>Third control: route work to the right model</h2>
@@ -212,6 +214,7 @@ and line numbers. Never edit files or make final decisions.
           <li><a href="https://natesnewsletter.substack.com/p/token-burn-dashboard" target="_blank" rel="noreferrer">Nate's Newsletter — Build a Token Burn Dashboard to Track What Your AI Actually Does</a></li>
           <li><a href="https://tech.autoscout24.com/blog/posts/3-techniques-to-reduce-token-consumption-claude-code-codex/" target="_blank" rel="noreferrer">AutoScout24 TechBlog — 3 Simple Techniques to Reduce Token Consumption in Claude Code and Codex</a></li>
           <li><a href="https://github.com/rtk-ai/rtk" target="_blank" rel="noreferrer">RTK — CLI proxy for compact development-tool output</a></li>
+          <li><a href="https://github.com/tirth8205/code-review-graph" target="_blank" rel="noreferrer">Code Review Graph — Local-first code intelligence graph for MCP and CLI</a></li>
           <li><a href="https://learn.chatgpt.com/docs/agent-configuration/subagents" target="_blank" rel="noreferrer">OpenAI Docs — Subagents</a></li>
           <li><a href="https://learn.chatgpt.com/docs/agent-configuration/agents-md" target="_blank" rel="noreferrer">OpenAI Docs — Custom instructions with AGENTS.md</a></li>
         </ul>
