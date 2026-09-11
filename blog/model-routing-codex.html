@@ -96,9 +96,11 @@ rtk aws sts get-caller-identity</code></pre>
 
         <p>Blind repository exploration is expensive. An agent searches for <code>auth</code>, opens several files, follows imports, reads tests, and slowly reconstructs a dependency graph that the codebase already contains.</p>
 
-        <p>A structural index can answer smaller questions: who calls this function, what depends on this module, where are the tests, and what is the likely impact radius? Tree-sitter or language-server-based tools can expose that information through MCP. Semantic search helps when the question is about intent rather than a symbol name. Repo packers are useful when a clean whole-repository snapshot is genuinely required.</p>
+        <p>Think of the repository as a large city. Searching with <code>rg</code> and opening every match is like exploring it street by street. A structural index is the map: it already knows which functions call each other, where a symbol is defined, which tests cover it, and which modules may be affected by a change.</p>
 
-        <p>The order matters. Ask the graph or index first, then use <code>rg</code> and direct file reads to verify the relevant sections. Structured navigation has setup and maintenance cost, so it pays off most in large or tightly coupled repositories. Small codebases may not need it.</p>
+        <p>Tree-sitter and language-server-based tools build this map from the code's syntax and references. MCP gives the agent a standard way to ask questions such as "who calls this function?" or "what is the impact radius?" Semantic search helps when the agent knows the intent but not the symbol name. Repo packers provide a cleaned snapshot when the whole repository is genuinely needed.</p>
+
+        <p>The map does not replace source inspection. It narrows the search. The efficient order is to query the graph first, use <code>rg</code> to confirm the relevant locations, and read the exact code before editing it. Structured navigation has setup and maintenance cost, so it pays off most in large or tightly coupled repositories. Small codebases may not need it.</p>
 
         <h2>Third control: route work to the right model</h2>
 
