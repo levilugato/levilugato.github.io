@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="How to use model routing, subagents, AGENTS.md, and TOML profiles in Codex to reduce context and reserve the main model for complex decisions.">
+  <meta name="theme-color" content="#07110e">
+  <meta property="og:title" content="Model routing in Codex: Terra explores, Luna executes">
+  <meta property="og:description" content="A practical architecture for reducing the main agent’s context without outsourcing critical decisions.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://levilugato.tech/blog/model-routing-codex.html">
+  <meta property="og:image" content="https://levilugato.tech/og.png?v=20260906-1">
+  <meta property="article:published_time" content="2026-09-11T00:00:00+01:00">
+  <meta property="article:author" content="Levi Lugato">
+  <meta name="twitter:card" content="summary_large_image">
+  <title>Model routing in Codex | Levi Lugato</title>
+  <link rel="canonical" href="https://levilugato.tech/blog/model-routing-codex.html">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../styles.css?v=20260911-1">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Model routing in Codex: Terra explores, Luna executes",
+    "description": "A practical architecture for reducing the main agent’s context without outsourcing critical decisions.",
+    "datePublished": "2026-09-11",
+    "dateModified": "2026-09-11",
+    "author": { "@type": "Person", "name": "Levi Lugato", "url": "https://levilugato.tech/" },
+    "mainEntityOfPage": "https://levilugato.tech/blog/model-routing-codex.html"
+  }
+  </script>
+</head>
+<body class="blog-page">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <a class="brand" href="../" aria-label="Levi Lugato, home"><img src="../favicon.svg" alt=""><span>levi@platform</span><b>:~$</b></a>
+    <nav aria-label="Primary navigation"><a href="../#about">about</a><a href="../#work">work</a><a href="./">blog</a><a href="../#contact">contact</a></nav>
+    <span class="online"><i></i> published</span>
+  </header>
+
+  <main class="blog-shell" id="main">
+    <p class="blog-breadcrumb"><a href="../">~/</a> <a href="./">blog/</a> model-routing-codex.md</p>
+    <article>
+      <header class="article-header">
+        <p class="article-kicker">AI ENGINEERING · CONTEXT ENGINEERING</p>
+        <h1>Model routing in Codex: Terra explores, Luna executes</h1>
+        <p class="article-deck">How to reduce the main agent’s context with specialized subagents—without outsourcing architecture, security, or technical accountability.</p>
+        <div class="article-byline"><span>By Levi Lugato</span><time datetime="2026-09-11">September 11, 2026</time><span>12 min read</span></div>
+      </header>
+
+      <div class="article-body">
+        <p>A large share of a coding agent’s cost does not come from sophisticated reasoning. It comes from I/O: locating files, reading large modules, comparing manifests, counting occurrences, generating boilerplate, and running predictable checks. Putting all of that into the primary model’s context is like hiring a principal engineer to spend hours taking directory inventory.</p>
+
+        <p>The alternative is <strong>model routing</strong>: classify each subtask by the capability it requires and send it to the appropriate model. The primary model remains responsible for the problem; workers absorb read-intensive exploration and mechanical execution.</p>
+
+        <blockquote><p>The goal is not to remove tokens from the system. It is to prevent low-value tokens from occupying the most expensive and cognitively important context.</p></blockquote>
+
+        <h2>The problem: the context window is an architectural concern</h2>
+
+        <p>When an agent reads dozens of files, every result competes for space with requirements, previous decisions, test failures, and high-value evidence. Even before a hard context limit is reached, the signal-to-noise ratio deteriorates. The model must repeatedly recover what matters from an increasingly large transcript.</p>
+
+        <p>This makes <strong>context engineering</strong> an architectural discipline. A good prompt is not enough; we must control which data enters the context, who processes it, and the format in which it returns.</p>
+
+        <h2>A practical division of responsibility</h2>
+
+        <p>In Codex, I use three levels. Routing is not simply about a “strong model” and a “weak model.” It is based on the shape of the task:</p>
+
+        <table class="routing-table">
+          <thead><tr><th>Owner</th><th>Workload</th><th>Why</th></tr></thead>
+          <tbody>
+            <tr><td><strong>gpt-5.6-terra</strong><br>low · read-only</td><td>Read-heavy scans, large files, cross-repository correlation, and document processing.</td><td>Explores broad context and returns distilled evidence.</td></tr>
+            <tr><td><strong>gpt-5.6-luna</strong><br>low</td><td>Searches, counts, manifests, boilerplate, localized changes, and predictable validation.</td><td>Executes narrow, clear, repetitive tasks quickly.</td></tr>
+            <tr><td><strong>Primary agent</strong></td><td>Architecture, complex debugging, security, conflict resolution, integration, and final conclusions.</td><td>Preserves end-to-end coherence and accountability.</td></tr>
+          </tbody>
+        </table>
+
+        <p>This separation prevents two common mistakes: using a frontier model for purely mechanical work, or allowing an economical worker to make decisions that require system-level understanding.</p>
+
+        <h2>Fan-out, reduction, and synthesis</h2>
+
+        <p>For a broad analysis, the primary agent can run a small <strong>map-reduce</strong> pattern:</p>
+
+        <pre><code>user request
+    │
+    ├── broad_reader ──► topology + relevant files
+    ├── mechanical_worker ──► counts + manifests + checks
+    └── primary agent ──► security + architecture + final synthesis</code></pre>
+
+        <p>During <strong>fan-out</strong>, independent subtasks run in parallel. During reduction, each worker returns only structured conclusions: files, line numbers, validation, and risks. The primary agent then correlates the results and directly inspects only the decisive sections.</p>
+
+        <p>The output contract matters. If a subagent returns long logs or complete files, the savings disappear. Its output must be deliberately small, precise, and auditable.</p>
+
+        <h2>AGENTS.md as a control plane</h2>
+
+        <p>The <code>AGENTS.md</code> file acts as a declarative policy layer. A global rule can define when to delegate, which profile to use, and which decisions must never leave the primary agent. Repository-specific files can add constraints closer to the code.</p>
+
+        <p>A condensed example:</p>
+
+        <pre><code>## Default delegation and model routing
+
+- Use broad_reader for repository exploration, large-file review,
+  and cross-file correlation.
+- Use mechanical_worker for narrow, repeatable work.
+- Keep architecture, security, complex debugging, and final
+  integration in the primary agent.
+- Never assign overlapping files to concurrent editing agents.</code></pre>
+
+        <p>This creates a readable, versionable policy independent of each task’s prompt. Instructions alone, however, should not replace technical isolation. Agent profiles complete the policy.</p>
+
+        <h2>TOML profiles: capability and least privilege</h2>
+
+        <p>Custom agents can define their model, reasoning effort, sandbox, and dedicated instructions. For broad exploration, a read-only profile reduces the chance that investigation produces accidental changes:</p>
+
+        <pre><code>name = "broad_reader"
+model = "gpt-5.6-terra"
+model_reasoning_effort = "low"
+sandbox_mode = "read-only"
+
+developer_instructions = """
+Correlate evidence and return concise findings with exact paths
+and line numbers. Never edit files or make final decisions.
+"""</code></pre>
+
+        <p>The mechanical worker can receive <code>workspace-write</code>, provided that its scope is narrow, its files do not overlap with another worker’s, and the primary agent reviews the diff. This is a direct application of <strong>least privilege</strong>: each agent receives only the authority necessary to complete its part.</p>
+
+        <h2>What should not be delegated</h2>
+
+        <p>Model routing is not an excuse to fragment accountability. Some tasks depend on deep context, judgment, and the ability to evaluate indirect consequences:</p>
+
+        <ul>
+          <li>architectural decisions and changes to system boundaries;</li>
+          <li>security analysis, IAM, and data exposure;</li>
+          <li>debugging concurrency, race conditions, and intermittent failures;</li>
+          <li>destructive or difficult-to-reverse migrations;</li>
+          <li>resolving contradictory results from different agents;</li>
+          <li>final review, risk-proportionate testing, and approval for delivery.</li>
+        </ul>
+
+        <p>Subagents can collect evidence in these domains, but final interpretation should remain with the agent that owns the end-to-end view.</p>
+
+        <h2>The hidden cost of delegation</h2>
+
+        <p>Delegation has a cost too. There is orchestration latency, some repeated context, and token consumption by the worker. For small files or tasks that take only a few minutes, the overhead can exceed the savings. Routing therefore needs a threshold: delegate when there is enough volume, real parallelism, or predictable work to justify coordination.</p>
+
+        <div class="article-callout"><strong>About the 90% reduction</strong><p>The figure reported by Spotify measures the reduction of tokens in the primary agent’s context under specific scenarios. The worker still consumes tokens. The economic benefit depends on delegated volume, model pricing, and summary quality.</p></div>
+
+        <h2>Accountability remains with the primary agent</h2>
+
+        <p>The best implementation of this pattern is not the one that creates the most agents. It is the one that keeps the primary context small without losing traceability. The primary agent must validate evidence, inspect consequential changes, run appropriate tests, and reject weak conclusions.</p>
+
+        <p>Model routing is ultimately Platform Engineering applied to agents: specialized paved paths, guardrails, isolation, and predictable interfaces that make the system more efficient—without obscuring who remains accountable for the outcome.</p>
+
+        <h2>References</h2>
+
+        <ul>
+          <li><a href="https://engineering.atspotify.com/2026/9/portal-by-spotify-cut-my-claude-code-token-usage-by-90" target="_blank" rel="noreferrer">Spotify Engineering — Portal by Spotify cut my Claude Code token usage by 90%</a></li>
+          <li><a href="https://learn.chatgpt.com/docs/agent-configuration/subagents" target="_blank" rel="noreferrer">OpenAI Docs — Subagents</a></li>
+          <li><a href="https://learn.chatgpt.com/docs/agent-configuration/agents-md" target="_blank" rel="noreferrer">OpenAI Docs — Custom instructions with AGENTS.md</a></li>
+        </ul>
+
+        <footer class="article-footer"><span>process exited with code 0</span><a href="./">← All posts</a></footer>
+      </div>
+    </article>
+  </main>
+
+  <footer><span>© 2026 Levi Lugato</span><span class="footer-command">article rendered successfully</span><a href="../">return ~/ ↑</a></footer>
+</body>
+</html>

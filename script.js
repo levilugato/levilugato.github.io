@@ -6,6 +6,7 @@ const commands = {
   about: { target: "#about", message: "Opening about.md…" },
   work: { target: "#work", message: "Listing selected work…" },
   resume: { target: "#resume", message: "Parsing resume.json…" },
+  blog: { target: "#blog", message: "Listing field notes…" },
   contact: { target: "#contact", message: "Executing contact.sh…" },
   home: { target: "#top", message: "Returning to ~/…" },
   clear: { target: "#top", message: "Session cleared." }
@@ -15,7 +16,7 @@ form?.addEventListener("submit", (event) => {
   event.preventDefault();
   const command = input.value.trim().toLowerCase().replace(/^\.\//, "");
   if (command === "help" || command === "ls") {
-    output.textContent = "Available: about · work · resume · contact · home · clear";
+    output.textContent = "Available: about · work · resume · blog · contact · home · clear";
     input.select();
     return;
   }
